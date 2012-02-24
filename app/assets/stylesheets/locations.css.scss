@@ -1,0 +1,58 @@
+// Place all the styles related to the Locations controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+#contentdiv{
+  
+  width:930px;
+  margin: 0 auto;
+  
+}
+
+
+#map_container {
+
+float:right;
+width:600px;
+   
+}
+
+
+#locationsubmit{
+  height:30px;
+  width:300px;
+  margin: 2px 2px;
+  
+}
+
+#newlocationbutton{
+  
+ 
+  float:left;
+  margin:0 10px 25px 0;
+  padding:0 0;
+  
+}
+
+#newlocation{
+  width:500px;
+  
+  height:30px;
+}
+
+
+#markerlist {
+  
+  width:330px;
+ 
+    
+}
+
+
+.clear{
+  
+  clear: both;
+  
+  
+}

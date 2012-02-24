@@ -1,0 +1,237 @@
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=true&libraries=places"></script>
+
+<div id="container" style=" width:940px; margin: 0 auto;">   
+  <div id="sidebar" style="height:500px; width:150px;float:left"></div>
+<div id="map" style="height: 400px; width: 600px; border: 1px solid #333;"></div>
+<div class="field" style="margin: 5px 0px 0px 0px"> 
+  <%= form_tag("#", :method => "get") do %> 
+    <%= label_tag(:search, "Search for:") %>
+    <%= text_field_tag :location_search, nil, :size => 60, :type => "search" %>
+    <%= button_to_function("Submit","locationSearch()") %>
+  <% end %>
+  
+  <br/>
+  
+  <%= form_tag("#", :method => "get") do %> 
+    <%= label_tag(:food, "Food") %>
+    <%= check_box_tag :foodbox, '#', true, :onclick => "boxclick(this, 'food');" %>
+    <%= label_tag(:entertainment, "Entertainment") %>
+    <%= check_box_tag :entertainmentbox, '#', true, :onclick => "boxclick(this, 'entertainment');" %>
+    <%= label_tag(:nightclub, "Night Clubs") %>
+    <%= check_box_tag :nightclubbox, '#', true, :onclick => "boxclick(this, 'nightclub');" %>
+    <%= label_tag(:all, "Show/Hide All") %>
+    <%= check_box_tag :all, '#', true, :onclick => "clickall(this);" %>
+  <% end %>
+</class>  
+  
+</div>
+<script type="text/javascript">
+var map;
+var arrMarkers = [];
+var arrInfoWindows = [];
+var sidebar_html = "";
+var gicons = [];
+
+var latlngbounds = new google.maps.LatLngBounds();
+var infowindow = new google.maps.InfoWindow(
+  { 
+    size: new google.maps.Size(150,50)
+  });
+
+function addMapBehavior(sidebar_element){
+  var centerCoord = new google.maps.LatLng(34, -118); 
+  var mapOptions = {
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  }
+  //create new Googlemap
+  map = new google.maps.Map(document.getElementById("map"), mapOptions);
+  //retrieve datapoint info
+  getData();
+  //fit map to include all points
+  map.fitBounds(latlngbounds);
+  
+  
+  //create sidebar list of points
+  document.getElementById(sidebar_element).innerHTML = createInfoLinks();  
+   
+  console.log(arrMarkers);
+  
+  //close info window when clicking on the map
+  google.maps.event.addListener(map, 'click', function(){
+    infowindow.close();
+  });
+  
+  
+  
+}
+
+function getData(){
+  
+  //retrieve JSON datapoints and create markers
+  <% @locations.each do |location| %>
+
+    var lat = <%= location.lat %>;
+    var lng = <%= location.lng %>;
+    var point = new google.maps.LatLng(lat,lng);
+    
+    //extend map bounds to include all points
+    latlngbounds.extend(point);
+    
+    var location_name = "<%= location.location_name %>";
+    var address = "<%= location.address %>";
+    var rating = <%= location.rating %>;
+    var website = "<%= location.website %>";
+    var category = "<%= location.category %>";
+    //create markers for each point
+    var marker = createMarker(point,location_name,address,rating,website,category);
+   
+  <% end %>
+}
+
+function getMarkerImage(iconColor){
+  gicons[iconColor] = new google.maps.MarkerImage("/images/"+iconColor+"-pin.png",
+  new google.maps.Size(27, 36),
+  new google.maps.Point(0,0),
+  new google.maps.Point(10,26));
+  
+  return gicons[iconColor];
+}
+
+function changeCategory2Color(category) {
+   var color = "red";
+   switch(category) {
+     case "entertainment": color = "blue";
+                break;
+     case "food":          color = "green";
+                break;
+     case "nightclub":     color = "red";
+                break;
+     default:              color = "red";
+                break;
+   }
+   return color;
+}
+
+gicons["food"] = getMarkerImage(changeCategory2Color("food"));
+gicons["entertainment"] = getMarkerImage(changeCategory2Color("entertainment"));
+gicons["nightclub"] = getMarkerImage(changeCategory2Color("nightclub"));
+
+
+function createMarker(point,location_name,address,rating,website,category) {
+  var marker = new google.maps.Marker({
+  position: point,
+  icon: gicons[category],
+  map: map,
+  title: location_name
+  });
+
+  marker.myaddress = address;
+  marker.myname = location_name;
+  marker.myrating = rating;
+  marker.mywebsite = website;
+  marker.mycategory = category;
+
+  arrMarkers.push(marker);
+
+  
+  
+  google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent("<b>"+location_name+"<\/b><p>"+address+"<\/p><p> Rating: "+rating+"<\/p>"+"<p> Website: "+"<a href=\""+website+"\">"+website+"<\/a><\/p>"); 
+            infowindow.open(map,marker);
+  });
+}
+
+
+function createInfoLinks(){
+  var listOfLinks ="";
+  for (var i=0; i<arrMarkers.length; i++) {
+    if(arrMarkers[i].getVisible()){
+      listOfLinks += '<a href="javascript:myclick(' + i + ')">' + arrMarkers[i].myname + '<\/a><br>';
+    }
+  }
+  return listOfLinks
+}
+
+function myclick(i) {
+  google.maps.event.trigger(arrMarkers[i], 'click');
+}
+
+function hide(category){
+  for( var i=0;i<arrMarkers.length;i++){
+    if (arrMarkers[i].mycategory == category){
+      arrMarkers[i].setVisible(false);
+    }
+  }
+  infowindow.close();
+}
+
+function show(category){
+  for (var i=0;i<arrMarkers.length;i++){
+    if(arrMarkers[i].mycategory == category){
+      arrMarkers[i].setVisible(true);
+      map.fitBounds(latlngbounds);
+    }
+  }
+  console.log(category);
+}
+
+
+
+function boxclick(box,category){
+  if (box.checked){
+    show(category);
+  } else{
+    hide(category);
+  }
+  
+}
+
+function clickall(box){
+  if(box.checked){
+    document.getElementById("foodbox").checked = true;
+    document.getElementById("entertainmentbox").checked = true;
+    document.getElementById("nightclubbox").checked = true;
+    show("food");
+    show("entertainment");
+    show("nightclub");
+  } else {
+    document.getElementById("foodbox").checked = false;
+    document.getElementById("entertainmentbox").checked = false;
+    document.getElementById("nightclubbox").checked = false;
+    hide("food");
+    hide("entertainment");
+    hide("nightclub");
+  }
+  
+}
+
+
+function locationSearch(){
+var search = document.getElementById("location_search").value.toLowerCase();
+console.log(search);  
+  for(var i=0;i<arrMarkers.length;i++){
+    if(arrMarkers[i].myname.toLowerCase().search(search) != -1) {
+         console.log(arrMarkers[i]);
+         arrMarkers[i].setVisible(true);
+         map.fitBounds(latlngbounds);
+    }
+    else {
+         arrMarkers[i].setVisible(false);
+    }
+  }
+}
+
+
+
+
+$(function(){
+// addMapBehavior map (create markers, infowindows and list)
+addMapBehavior("sidebar");
+
+// "live" bind click event
+$("#markers a").live("click", function(){
+var i = $(this).attr("rel");
+  arrInfoWindows[i].open(map, arrMarkers[i]);
+});
+  });
+   </script>

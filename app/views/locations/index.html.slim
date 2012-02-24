@@ -1,0 +1,67 @@
+
+
+h1 Listing locations
+
+table
+  tr
+    th User
+    th Lat
+    th Lng
+    th Location Name
+    th Address
+    th
+    th
+    th
+  
+
+  - @locations.each do |location| 
+    tr
+      td
+        = location.user.name 
+      td
+        = location.lat
+      td
+        = location.lng
+      td
+        = location.location_name
+      td
+        = location.address 
+      td 
+        = link_to 'Show', location
+      td
+        = link_to 'Edit', edit_location_path(location)
+      td
+        = link_to 'Destroy', location, confirm: 'Are you sure?', method: :delete
+  
+
+br
+
+#locationsubmit
+
+  #newlocationbutton
+    = link_to 'New Location', "new_location_path"
+
+  #newlocation style="display:none"
+   
+
+br.clear
+
+
+#contentdiv
+  = render :partial => 'map'
+
+/ = gmaps("map_options" => {"auto_adjust" => true, "map_container_id" => "map_container", "zoom" => 1, "center_on_user" => true, "libraries" => ["places"] }, "markers" => {"data" => @json, "options" => {"list_container" => "markers_list", "infobox" => "description" } }) 
+
+
+
+
+
+
+#markerlist 
+  ul id="markers_list"
+  
+  
+
+  
+  
+    

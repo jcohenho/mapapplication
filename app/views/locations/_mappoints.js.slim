@@ -1,0 +1,9 @@
+javascript:
+
+- points.each do |p|
+  marker = new google.maps.Marker({
+    map:map,
+    draggable:false,
+    animation: google.maps.Animation.DROP,
+    position: centrePoint
+  });

@@ -1,0 +1,64 @@
+= form_for(@location) do |f| 
+  - if @location.errors.any? 
+    #error_explanation
+      h2 
+        = pluralize(@location.errors.count, "error")
+        | prohibited this location from being saved:
+
+      ul
+      - @location.errors.full_messages.each do |msg| 
+        li = msg 
+
+
+  .field 
+    = label_tag :search 
+    = text_field_tag :location_search, nil, :size => 60, :type => "search"
+
+  br
+
+  .field
+    = f.label :address, "Full Address" 
+    = f.text_field :address, :size => 60 
+
+
+  .field
+    = f.label :location_name 
+    = f.text_field :location_name, :size => 18 
+
+    = f.label :phone_number 
+    = f.text_field :phone_number, :size => 18 
+
+  .field
+    = f.label :city
+    = f.text_field :city, :size => 18
+    = f.label :postcode
+    = f.text_field :postcode, :size => 6
+
+  .field
+    = f.label :state 
+    = f.text_field :state, :size => 18
+
+    = f.label :country  
+    = f.text_field :country, :size => 18
+
+  .field
+    = f.label :lat 
+    = f.text_field :lat, :size => 18 
+    = f.label :lng 
+    = f.text_field :lng, :size => 18
+    
+  .field
+    = f.label :website
+    = f.text_field :website, :size => 50
+    
+  .field
+    = f.label :rating
+    = f.text_field :rating, :size => 18
+    = f.label :category
+    = f.text_field :category, :size => 18
+ 
+    = render :partial => "googlemap_show"
+ 
+    = f.submit 
+
+
