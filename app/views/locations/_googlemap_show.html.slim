@@ -19,8 +19,8 @@ javascript:
 	var mylat = document.getElementById("location_lat").value;
 	var mylng = document.getElementById("location_lng").value;
 	if (jQuery.isEmptyObject(mylat)) {
-	  var mylat = '13.731548';
-	  var mylng = '100.56799';
+	  var mylat = '34.084832';
+	  var mylng = '-118.344040';
 	  var defaultZoom = 14; // decrease zoom to 13 if there is no selection from user.
 	};
 
@@ -119,6 +119,8 @@ javascript:
     if (place.rating){
     var rating = place.rating;
     }
+ 
+    
     if(place.formatted_phone_number){
     var formatted_phone_number = place.formatted_phone_number;
     }

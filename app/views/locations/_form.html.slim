@@ -17,7 +17,7 @@
   br
 
   .field
-    = f.label :address, "Full Address" 
+    = f.label :address, "Full Address"
     = f.text_field :address, :size => 60 
 
 
@@ -55,7 +55,7 @@
     = f.label :rating
     = f.text_field :rating, :size => 18
     = f.label :category
-    = f.text_field :category, :size => 18
+    = f.collection_select :category, Location::CATEGORIES, :to_s, :to_s, :include_blank => false
  
     = render :partial => "googlemap_show"
  

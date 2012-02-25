@@ -79,7 +79,7 @@ function getData(){
     
     var location_name = "<%= location.location_name %>";
     var address = "<%= location.address %>";
-    var rating = <%= location.rating %>;
+    var rating = "<%= location.rating %>";
     var website = "<%= location.website %>";
     var category = "<%= location.category %>";
     //create markers for each point
@@ -136,9 +136,12 @@ function createMarker(point,location_name,address,rating,website,category) {
   
   
   google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent("<b>"+location_name+"<\/b><p>"+address+"<\/p><p> Rating: "+rating+"<\/p>"+"<p> Website: "+"<a href=\""+website+"\">"+website+"<\/a><\/p>"); 
-            infowindow.open(map,marker);
+    infowindow.setContent("<b>"+location_name+"<\/b><p>"+address+"<\/p><p> Rating: "+rating+"<\/p>"+"<p> Website: "+"<a href=\""+website+"\">"+website+"<\/a><\/p>"); 
+    infowindow.open(map,marker);
   });
+  
+  
+  
 }
 
 

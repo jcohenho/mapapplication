@@ -6,6 +6,9 @@ class Location < ActiveRecord::Base
   belongs_to :user
   
   validates_uniqueness_of :lat, :scope => :lng
+  
+  
+  CATEGORIES = ['food','entertainment','nightclub']
                     
   def prevent_geocoding
       address.blank? || (!lat.blank? && !lng.blank?) 
