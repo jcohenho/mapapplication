@@ -1,6 +1,6 @@
 == GoogleMaps API Map App "Mini Yelp"
 
-This is a simple GoogleMaps API application that lets you add your favorite locations to a map. You can filter the location markers that display based on the by checkbox filters below the map. Authentication is done with devise.
+This is a simple GoogleMaps API application that lets you add your favorite locations to a map. You can filter the location markers that display based on the search input or by the checkbox filters below the map. Authentication is done with devise.
 
 
 == Getting Started
